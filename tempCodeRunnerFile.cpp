@@ -18,8 +18,6 @@ int main() {
         std::cout << "3. Delete Tasks\n";
         std::cout << "4. Edit Tasks\n";
         std::cout << "5. Search Tasks\n";
-        std::cout << "6. Mission status statistics\n";
-        std::cout << "7. Sort by priority\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -28,7 +26,8 @@ int main() {
                 std::cout << "Goodbye!\n";
                 break;
             case 1:
-                TaskManager::AddTaskToSave(taskManager);
+                task=task.getTask();
+                taskManager.add(task);
                 break;
             case 2:
                 taskManager.display();
@@ -41,14 +40,6 @@ int main() {
                 break;
             case 5:
                 TaskManager::find(taskManager);
-                break;
-            case 6:
-                TaskManager::findStatus(taskManager);
-                break;
-            case 7:
-                TaskManager::sortTasksByPriority(taskManager);
-                break;
-                break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
         }

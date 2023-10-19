@@ -50,7 +50,8 @@ public:
 
     static int countDate(Date schedulingDate, Date deadline);
 
-    Task getTask();
+    static Task getTask();
+
 
     void setStatus(Status status) {
         this->status=status;
@@ -65,7 +66,7 @@ public:
     }
 
     void setSchedulingDate(Date date) {
-        this->date=date;
+        this->schedulingDate=date;
     }
 
     void setPriority(Priority a) {
