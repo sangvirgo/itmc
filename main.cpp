@@ -13,13 +13,14 @@ int main() {
         std::cout << "         Task Management System\n";
         std::cout << "-----------------------------------------\n";
         std::cout << "0. Exit\n";
-        std::cout << "1. Add Task\n";
-        std::cout << "2. Display Tasks\n";
+        std::cout << "1. Display Tasks\n";
+        std::cout << "2. Add Task\n";
         std::cout << "3. Delete Tasks\n";
         std::cout << "4. Edit Tasks\n";
         std::cout << "5. Search Tasks\n";
         std::cout << "6. Mission status statistics\n";
         std::cout << "7. Sort by priority\n";
+        std::cout << "8. Filter Task\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -27,10 +28,10 @@ int main() {
             case 0:
                 std::cout << "Goodbye!\n";
                 break;
-            case 1:
+            case 2:
                 TaskManager::AddTaskToSave(taskManager);
                 break;
-            case 2:
+            case 1:
                 taskManager.display();
                 break;
             case 3:
@@ -48,6 +49,8 @@ int main() {
             case 7:
                 TaskManager::sortTasksByPriority(taskManager);
                 break;
+            case 8:
+                TaskManager::filter(taskManager);
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
