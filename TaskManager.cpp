@@ -26,7 +26,6 @@ void TaskManager::deletetask(TaskManager& taskmanager) {
                 std::cout << "==============Task deleted successfully==================" << std::endl;
                 std::cout << "=========================================================" << std::endl;
                 temp.tasks.clear();
-            return;
         }
     }
     }
@@ -51,15 +50,41 @@ void TaskManager::deletetask(TaskManager& taskmanager) {
                 std::cout << "=========================================================" << std::endl;
                 std::cout << "==============Task deleted successfully==================" << std::endl;
                 std::cout << "=========================================================" << std::endl;
-                return;
             }
             else {
                 removedCount++;
             }
     }
     }
-        
+        // xử lý file 
+
+    char choice;
+    std::cout << "Do you wanna save to .txt file(Y or N): ";
+    std::cin >> choice;
+    
+    if (choice == 'Y' || choice == 'y') {
+    std::ofstream file("Task.txt", std::ios::out | std::ios::trunc);
+    if (!file) {
+        std::cerr << "Cannot open file for writing." << std::endl;
+        return;
+    }
+        for(Task newTask:taskmanager.tasks) {
+        file << Task::fomatTitle(newTask.getTitle()) << ", ";
+        file << static_cast<int>(newTask.getStatus()) << ", ";
+        file << newTask.getschedulingDate().day << " ";
+        file << newTask.getschedulingDate().month << " ";
+        file << newTask.getschedulingDate().year << " ";
+        file << static_cast<int>(newTask.getpriority()) << ", ";
+        file << newTask.getDate().day << " ";
+        file << newTask.getDate().month << " ";
+        file << newTask.getDate().year << ", ";
+        file << Task::fomatNotes(newTask.getNote()) << "\n";
+        }
+    file.close(); 
+    } 
 }
+
+
 
 void TaskManager::display() const{
 std::string statusStrings[] = {"NotCompleted", "InProgress", "Completed", "Canceled", "Overdue"};
@@ -205,6 +230,33 @@ void TaskManager::edittask(TaskManager& taskmanager) {
                     std::cout << "Invalid choice. Please enter a valid option." << std::endl;
             break;
     }
+
+        // xử lý file 
+
+    char choice;
+    std::cout << "Do you wanna save to .txt file(Y or N): ";
+    std::cin >> choice;
+    
+    if (choice == 'Y' || choice == 'y') {
+    std::ofstream file("Task.txt", std::ios::out | std::ios::trunc);
+    if (!file) {
+        std::cerr << "Cannot open file for writing." << std::endl;
+        return;
+    }
+        for(Task newTask:taskmanager.tasks) {
+        file << Task::fomatTitle(newTask.getTitle()) << ", ";
+        file << static_cast<int>(newTask.getStatus()) << ", ";
+        file << newTask.getschedulingDate().day << " ";
+        file << newTask.getschedulingDate().month << " ";
+        file << newTask.getschedulingDate().year << " ";
+        file << static_cast<int>(newTask.getpriority()) << ", ";
+        file << newTask.getDate().day << " ";
+        file << newTask.getDate().month << " ";
+        file << newTask.getDate().year << ", ";
+        file << Task::fomatNotes(newTask.getNote()) << "\n";
+        }
+    file.close(); 
+    } 
 }
 
 void TaskManager::readAFile(TaskManager& taskmanager) {
@@ -409,4 +461,91 @@ void TaskManager::AddTaskToSave(TaskManager& taskmanager) {
 
     // Add the new task to the task manager
     taskmanager.tasks.push_back(newTask);
+}
+
+// std::vector<Task> TaskManager::filerdeadline()
+
+void TaskManager::filter(TaskManager taskmanager) {
+
+    std::cout << "==================================" << std::endl;
+
+    // Check if the user wants to filter by deadline
+    char temp0;
+    std::cout << "Do you want to filter by deadline? (Y or N): ";
+    std::cin >> temp0;
+    if (temp0 == 'y' || temp0 == 'Y') {
+        Task::Date date;
+        Task::Date current = Task::getCurrentDate();
+        do {
+            std::cout << "Enter Deadline (Greater than the current date)" << std::endl;
+            std::cout << "Enter day: ";
+            std::cin >> date.day;
+            std::cout << "Enter month: ";
+            std::cin >> date.month;
+            std::cout << "Enter year: ";
+            std::cin >> date.year;
+        } while (!Task::compare(current, date) || !Task::isValidDate(date.day, date.month, date.year));
+
+        taskmanager.tasks.erase(std::remove_if(taskmanager.tasks.begin(), taskmanager.tasks.end(),
+            [date](const Task& task) {
+                return Task::fomatDate(task.getDate()) != Task::fomatDate(date);
+            }), taskmanager.tasks.end());
+    }
+
+    // Check if the user wants to filter by status
+    char temp1;
+    std::cout << "Do you want to filter by status? (Y or N): ";
+    std::cin >> temp1;
+    if (temp1 == 'y' || temp1 == 'Y') {
+        int status;
+        std::cout << "0. NotCompleted\n";
+        std::cout << "1. InProgress\n";
+        std::cout << "2. Completed\n";
+        std::cout << "3. Canceled\n";
+        std::cout << "4. Overdue\n";
+        std::cout << "Enter status to filter (0-4): ";
+        std::cin >> status;
+        while (status < 0 || status > 4) {
+            std::cout << "Invalid status. Please enter a value between 0 and 4: ";
+            std::cin >> status;
+        }
+        Task::Status statustemp = static_cast<Task::Status>(status);
+
+        taskmanager.tasks.erase(std::remove_if(taskmanager.tasks.begin(), taskmanager.tasks.end(),
+            [statustemp](const Task& task) {
+                return task.getStatus() != statustemp;
+            }), taskmanager.tasks.end());
+    }
+
+    // Check if the user wants to filter by priority
+    char temp2;
+    std::cout << "Do you want to filter by priority? (Y or N): ";
+    std::cin >> temp2;
+    if (temp2 == 'y' || temp2 == 'Y') {
+        int priority;
+        std::cout << "0. In_Today\n";
+        std::cout << "1. In_ThreeDay\n";
+        std::cout << "2. In_OneWeek\n";
+        std::cout << "3. In_TwoWeeks\n";
+        std::cout << "4. In_OneMonth\n";
+        std::cout << "Enter priority to filter (0-4): ";
+        std::cin >> priority;
+        while (priority < 0 || priority > 4) {
+            std::cout << "Invalid priority. Please enter a value between 0 and 4: ";
+            std::cin >> priority;
+        }
+        Task::Priority prioritytemp = static_cast<Task::Priority>(priority);
+
+        taskmanager.tasks.erase(std::remove_if(taskmanager.tasks.begin(), taskmanager.tasks.end(),
+            [prioritytemp](const Task& task) {
+                return task.getpriority() != prioritytemp;
+            }), taskmanager.tasks.end());
+    }
+
+    if (taskmanager.tasks.empty()) {
+        std::cout << "No tasks match the filter criteria." << std::endl;
+    } else {
+        taskmanager.display();  // Display the filtered tasks
+    }
+    taskmanager.tasks.clear();
 }

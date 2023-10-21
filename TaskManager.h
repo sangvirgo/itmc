@@ -33,6 +33,10 @@ public:
     static void sortTasksByPriority(TaskManager& taskmanger);
 
     static void AddTaskToSave(TaskManager& taskmanager);
+
+    static void filter(TaskManager taskmanager);
+
+    // static std::vector<Task> filerdeadline();
 };
 
 #endif
