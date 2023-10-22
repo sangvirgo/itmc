@@ -32,21 +32,26 @@ void TaskManager::deletetask(TaskManager& taskmanager) {
     else if(count==0) {
         std::cout << "Task with title '" << title << "' not found." << std::endl;
         std::cout << "Please check again" << std::endl;
+        return;
     }
     else {
         std::cout << "=================Tasks with the same title===============" << std::endl;
         std::cout << std::endl;
         temp.display();
-        temp.tasks.clear();
         std::cout << "Please enter ordinal to delete: " ;
         int x, removedCount(0); std::cin >> x;
         while(x<=0 || x>count) {
-            std::cout << "input error, please enter ordinal to delete again: ";
+            std::cout << "Input error, please enter ordinal to delete again: ";
             std::cin >> x;
         }
-        for(auto it=taskmanager.tasks.begin(); it!=taskmanager.tasks.end(); it++) {
-            if(Task::fomatTitle(it->getTitle())==Task::fomatTitle(title) && removedCount==x-1) {
-                taskmanager.tasks.erase(it);
+        for(auto it=temp.tasks.begin(); it!=temp.tasks.end(); it++) {
+            if(removedCount==x-1) {
+                    for(auto su=temp.tasks.begin(); su!=temp.tasks.end(); su++) { 
+                        if(it==su) {
+                            taskmanager.tasks.erase(su);
+                            break;
+                        }
+                    }
                 std::cout << "=========================================================" << std::endl;
                 std::cout << "==============Task deleted successfully==================" << std::endl;
                 std::cout << "=========================================================" << std::endl;
@@ -327,7 +332,7 @@ void TaskManager::find(TaskManager taskmanager) {
     for (int i = 0; i < taskmanager.tasks.size(); i++) {
         if (Task::fomatTitle(taskmanager.tasks[i].getTitle()) == Task::fomatTitle(strtemp)) {
             objtemp.tasks.push_back(taskmanager.tasks[i]);
-            indices.push_back(i); // Store the index
+            indices.push_back(i+1); // Store the index
         }
     }
     
